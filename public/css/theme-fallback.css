@@ -1,0 +1,20 @@
+/* === FALLBACK STYLES for Xchain Template Home 2 === */
+:root {
+    --bg-dark: #111111;
+    --bg-card: #1B1B1B;
+    --yellow: #FCB808;
+    --text-primary: #FFFFFF;
+    --text-secondary: #BBBBBB;
+    --text-muted: #969696;
+    --border-color: #424242;
+    --font-heading: 'Sora', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+}
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    margin: 0; padding: 0;
+}
+
+.elementor-button{display:inline-block;padding:12px 28px;font-family:Sora,sans-serif;font-weight:600;font-size:14px;border-radius:50px;text-decoration:none;cursor:pointer;transition:all .3s;border:none}.elementor-button-link{background:#FCB808;color:#111}.elementor-button:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(252,184,8,0.3)}.elementor-nav-menu{list-style:none;margin:0;padding:0;display:flex;gap:5px}.elementor-nav-menu a{color:#BBB;text-decoration:none;padding:8px 16px;font-family:Sora,sans-serif;font-size:14px;font-weight:500;transition:color .2s;display:block}.elementor-nav-menu a:hover,.elementor-nav-menu .elementor-item-active{color:#FCB808}.elementor-nav-menu .sub-menu{display:none;position:absolute;background:#1B1B1B;border:1px solid #424242;border-radius:8px;min-width:180px;padding:8px 0;top:100%;left:0;z-index:999}.elementor-nav-menu li:hover>.sub-menu{display:block}.elementor-nav-menu .sub-menu a{padding:8px 20px;font-size:13px}.elementor-heading-title{color:#fff;font-family:Sora,sans-serif}h2.elementor-heading-title{font-size:32px;font-weight:700}h3.elementor-heading-title{font-size:20px;font-weight:700}h4.elementor-heading-title{font-size:18px;font-weight:600}.elementor-top-section{padding:60px 0}.elementor-section-boxed .elementor-container{max-width:1200px;margin:0 auto;padding:0 20px}.elementor-col-50{width:50%}.elementor-col-33{width:33.333%}.elementor-col-25{width:25%}.elementor-container,.elementor-row{display:flex;flex-wrap:wrap}.woocommerce ul.products{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;list-style:none;padding:0;margin:0}.woocommerce ul.products li.product{background:#1B1B1B;border:1px solid #424242;border-radius:12px;overflow:hidden;transition:all .3s;padding:0}.woocommerce ul.products li.product:hover{border-color:#FCB808;transform:translateY(-4px)}.woocommerce ul.products li.product img{width:100%;height:220px;object-fit:cover}.woocommerce-loop-product__title{font-family:Sora,sans-serif;font-size:15px;font-weight:600;color:#fff;padding:12px 16px 4px;margin:0}.woocommerce ul.products li.product .price{font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:#FCB808;padding:0 16px 16px}.elementor-location-header{background:#111;border-bottom:1px solid #424242;position:sticky;top:0;z-index:1000}.elementor-location-footer{background:#111;border-top:1px solid #424242;padding:60px 0 30px}.elementor-social-icon{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#1B1B1B;color:#BBB;margin-right:8px;text-decoration:none;transition:all .3s}.elementor-social-icon:hover{background:#FCB808;color:#111}.elementor-search-form__container{display:flex;align-items:center;background:#1B1B1B;border:1px solid #424242;border-radius:50px;padding:8px 16px}.elementor-search-form__icon{color:#969696;margin-right:8px}.elementor-search-form__input{background:transparent;border:none;color:#fff;font-family:Roboto,sans-serif;font-size:14px;outline:none;width:100%}.elementor-location-footer .elementor-nav-menu{flex-direction:column}.elementor-location-footer .elementor-nav-menu a{padding:6px 0;font-size:13px}@media(max-width:768px){.elementor-col-50,.elementor-col-33,.elementor-col-25{width:100%}.woocommerce ul.products{grid-template-columns:repeat(2,1fr)}h2.elementor-heading-title{font-size:24px}}@media(max-width:480px){.woocommerce ul.products{grid-template-columns:1fr}}
