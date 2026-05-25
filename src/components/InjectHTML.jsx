@@ -1,10 +1,10 @@
-// Renders a chunk of raw HTML and intercepts internal anchor clicks so they
-// behave like router navigations instead of full reloads. External, hash, and
-// mailto links are left alone.
-
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// Renders a chunk of static HTML.
+// - Intercepts internal anchor clicks for SPA navigation.
+// - Re-clones <script> tags so the browser actually executes them
+//   (innerHTML alone never runs inline scripts).
 export default function InjectHTML({ html, as: Tag = 'div', className }) {
   const ref = useRef(null);
   const navigate = useNavigate();
@@ -12,6 +12,14 @@ export default function InjectHTML({ html, as: Tag = 'div', className }) {
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+
+    // Re-run any <script> inside the injected HTML.
+    node.querySelectorAll('script').forEach((old) => {
+      const next = document.createElement('script');
+      for (const { name, value } of old.attributes) next.setAttribute(name, value);
+      next.text = old.textContent || '';
+      old.parentNode.replaceChild(next, old);
+    });
 
     const onClick = (e) => {
       const a = e.target.closest('a');

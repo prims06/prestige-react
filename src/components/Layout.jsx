@@ -4,8 +4,7 @@ import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 
 // Each Elementor-exported page used a different `elementor-page-<id>` class
-// on <body>, plus a few WordPress context classes. Per-page selectors in the
-// CSS depend on these, so we toggle them on route change.
+// on <body>. Per-page CSS selectors depend on these — toggle on route change.
 const PAGE_CLASSES = {
   '/':         ['home', 'wp-singular', 'page-template', 'page-template-elementor_header_footer', 'page', 'page-id-5548', 'elementor-page-5548'],
   '/home-2':   ['wp-singular', 'single', 'single-envato_tk_templates', 'postid-18', 'elementor-page-18'],
@@ -28,14 +27,26 @@ export default function Layout() {
     const classes = PAGE_CLASSES[pathname] || NOT_FOUND_CLASSES;
     document.body.classList.add(...classes);
 
-    // The original template loads an IntersectionObserver that sets the
-    // .e-lazyloaded class on background-image-bearing sections; without it,
-    // a CSS rule forces background-image:none on sections >3. Force-mark
-    // everything as loaded so backgrounds render immediately.
+    // Fire the events that the original site's jQuery/Elementor plugins
+    // listen for, so widgets in the newly-mounted page DOM discover their
+    // targets. Wrapped in rAF so React's commit lands first.
     requestAnimationFrame(() => {
       document.querySelectorAll('.e-con.e-parent').forEach((el) => {
         el.classList.add('e-lazyloaded');
       });
+      try {
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+        window.dispatchEvent(new Event('load'));
+      } catch {}
+      if (window.jQuery) {
+        try {
+          window.jQuery(document).trigger('ready');
+          window.jQuery(document).trigger('elementor/frontend/init');
+          if (window.elementorFrontend && window.elementorFrontend.init) {
+            window.elementorFrontend.init();
+          }
+        } catch {}
+      }
     });
 
     window.scrollTo(0, 0);
