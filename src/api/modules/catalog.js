@@ -11,10 +11,25 @@ function qs(params) {
   return s ? `?${s}` : '';
 }
 
+function limitQs(limit) {
+  return limit ? `?limit=${limit}` : '';
+}
+
 // All routes are public — skipAuth: true
 export const catalogApi = {
-  listEscorts:      (params) => api.get(`/catalog/escorts${qs(params)}`, { skipAuth: true }),
-  getEscort:        (id)     => api.get(`/catalog/escorts/${id}`, { skipAuth: true }),
-  listServices:     (params) => api.get(`/catalog/services${qs(params)}`, { skipAuth: true }),
-  getService:       (id)     => api.get(`/catalog/services/${id}`, { skipAuth: true }),
+  // ── Escorts ────────────────────────────────────────────────────────────────
+  listEscorts:  (params) => api.get(`/catalog/escorts${qs(params)}`, { skipAuth: true }),
+  getEscort:    (id)     => api.get(`/catalog/escorts/${id}`, { skipAuth: true }),
+
+  // ── Services ───────────────────────────────────────────────────────────────
+  listServices: (params) => api.get(`/catalog/services${qs(params)}`, { skipAuth: true }),
+  getService:   (id)     => api.get(`/catalog/services/${id}`, { skipAuth: true }),
+
+  // ── Homepage ───────────────────────────────────────────────────────────────
+  // Escortes les plus actives récemment (triées par last_message_at)
+  homepageTrending:         (limit) => api.get(`/catalog/homepage/trending${limitQs(limit)}`, { skipAuth: true }),
+  // Services boostés avec media (VIP → Premium → Bronze)
+  homepageFeaturedServices: (limit) => api.get(`/catalog/homepage/featured-services${limitQs(limit)}`, { skipAuth: true }),
+  // Escortes avec meilleur abonnement + leurs services avec media
+  homepageTopEscorts:       (limit) => api.get(`/catalog/homepage/top-escorts${limitQs(limit)}`, { skipAuth: true }),
 };

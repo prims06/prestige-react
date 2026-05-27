@@ -4,3 +4,5 @@ dist
 *.log
 .vite
 .gstack/
+.env
+yarn.lock
