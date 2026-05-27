@@ -1,7 +1,7 @@
 # Guide de conversion HTML → JSX (par page)
 
-Guide pratique pour un dev junior. Basé sur les 6 premières conversions réalisées
-(`LoginPage`, `NotFoundPage`, `ContactsPage`, `Blog2Page`, `Shop2Page`, `ProductPage`).
+Guide pratique pour un dev junior. Basé sur les 7 premières conversions réalisées
+(`LoginPage`, `NotFoundPage`, `ContactsPage`, `Blog2Page`, `Shop2Page`, `ProductPage`, `AuthorsPage`).
 
 > **Règle d'or :** le DOM final (balises, classes, attributs `data-*`) doit être pixel-perfect
 > identique au fragment source. Seule la syntaxe JSX change.
@@ -13,13 +13,13 @@ Guide pratique pour un dev junior. Basé sur les 6 premières conversions réali
 | Priorité | Page JSX | Fragment source | ~Taille |
 |---|---|---|---|
 | 1 | `src/pages/ShopPage.jsx` | `src/fragments/page-shop.js` | 38k |
-| 2 | `src/pages/AuthorsPage.jsx` | `src/fragments/page-authors.js` | 53k |
-| 3 | `src/pages/BlogPage.jsx` | `src/fragments/page-blog.js` | 53k |
-| 4 | `src/pages/AboutPage.jsx` | `src/fragments/page-about.js` | 74k |
-| 5 | `src/pages/Home2Page.jsx` | `src/fragments/page-home2.js` | 116k |
-| 6 | `src/pages/HomePage.jsx` | `src/fragments/page-home.js` | 139k |
-| 7 | `src/components/Header.jsx` | `src/fragments/header.js` | 48k |
-| 8 | `src/components/Footer.jsx` | `src/fragments/footer.js` | 21k |
+| ✅ | `src/pages/AuthorsPage.jsx` | `src/fragments/page-authors.js` | 53k |
+| 2 | `src/pages/BlogPage.jsx` | `src/fragments/page-blog.js` | 53k |
+| 3 | `src/pages/AboutPage.jsx` | `src/fragments/page-about.js` | 74k |
+| 4 | `src/pages/Home2Page.jsx` | `src/fragments/page-home2.js` | 116k |
+| 5 | `src/pages/HomePage.jsx` | `src/fragments/page-home.js` | 139k |
+| 6 | `src/components/Header.jsx` | `src/fragments/header.js` | 48k |
+| 7 | `src/components/Footer.jsx` | `src/fragments/footer.js` | 21k |
 
 ---
 
@@ -360,6 +360,323 @@ Pour chaque page, dans cet ordre :
 
 ---
 
+## Points d'attention systématiques
+
+Ce sont les vérifications effectuées sur **chaque** page convertie. Lis cette section
+une fois avant de commencer, puis reviens y vérifier élément par élément.
+
+---
+
+### A. Lire le fragment EN ENTIER avant d'écrire une ligne de JSX
+
+Ne commence pas à convertir section par section en lisant à la volée.
+Lis d'abord tout le fragment pour :
+- Identifier combien de sections existent au premier niveau
+- Repérer les patterns répétitifs (items en liste → futur array + map)
+- Voir si un même DOM pattern apparaît plusieurs fois (→ futur sous-composant)
+- Relever tous les `data-id` des sections → noms des fonctions helpers
+
+```
+Lecture → Plan → Code → Build check
+              ↑
+        NE PAS sauter cette étape
+```
+
+---
+
+### B. Chaque élément Elementor a TROIS identifiants à préserver
+
+Pour **chaque** `<section>`, `<div>` colonne, et `<div>` widget :
+
+```html
+<!-- Les 3 identifiants dans le fragment source -->
+class="... elementor-element-82cd3da ..."   ← dans className
+data-id="82cd3da"                           ← attribut séparé
+data-element_type="section"                 ← ET data-e-type="section"
+```
+
+```jsx
+// JSX correct — les 3 présents
+<section
+  className="elementor-section elementor-element elementor-element-82cd3da"
+  data-id="82cd3da"
+  data-element_type="section"
+  data-e-type="section"
+>
+```
+
+Si l'un des trois manque, le CSS ou le JS Elementor ne trouvera pas l'élément.
+`data-element_type` et `data-e-type` sont **toujours tous les deux présents** dans la source.
+
+---
+
+### C. Quand tu factorises en composant réutilisable, les IDs vont dans le tableau de données
+
+Si tu as 10 auteurs, 12 produits, 9 articles, chacun a ses propres IDs.
+Ces IDs ne disparaissent pas parce que tu as fait un composant.
+
+**Méthode :**
+1. Lire le fragment et relever tous les IDs pour chaque item
+2. Les ajouter comme champs dans l'array de données
+3. Les passer comme props au composant et les utiliser dans le JSX
+
+```js
+// Dans l'array de données, un objet par item répété
+{ name: 'Lydia', sId: '82cd3da', lcId: 'fa84781', imgId: '49008fa', ... }
+```
+
+```jsx
+// Dans le composant, utiliser les IDs via template literals
+<section className={`... elementor-element-${a.sId}`} data-id={a.sId}>
+  <div className={`... elementor-element-${a.lcId}`} data-id={a.lcId}>
+    <img className={`... wp-image-${a.wpImg}`} />
+```
+
+---
+
+### D. Les classes `elementor-element-XXXXX` sont des sélecteurs CSS, pas du décor
+
+Chaque classe `elementor-element-XXXXX` est utilisée dans le CSS généré par Elementor
+pour appliquer des styles spécifiques à cet élément (marges, couleurs, tailles, etc.).
+
+- **Ne jamais inventer un ID** → utilise exactement ce qui est dans le fragment
+- **Ne jamais fusionner deux IDs** → si deux éléments ont deux classes différentes, ce n'est pas une erreur
+- **Ne jamais supprimer un ID** → même s'il te semble inutile
+- **Ne jamais changer l'ordre des classes** → la spécificité CSS en dépend
+
+```jsx
+// ❌ FAUX — ID inventé ou simplifié
+className="elementor-section elementor-element my-section"
+
+// ✅ CORRECT — copié mot pour mot du fragment
+className="elementor-section elementor-top-section elementor-element elementor-element-a464f1f elementor-section-boxed elementor-section-height-default"
+```
+
+---
+
+### E. `data-settings` : JSON string, jamais objet JS
+
+Elementor lit ces attributs avec `JSON.parse(el.dataset.settings)`.
+Si tu passes un objet React, React va le stringifier en `[object Object]`.
+
+```jsx
+// ❌ FAUX — objet JS
+data-settings={{ mdp_selection_sticky_effect_enable: false }}
+
+// ✅ CORRECT — string JSON entre guillemets simples
+data-settings='{"mdp_selection_sticky_effect_enable":false}'
+```
+
+Pour les `data-settings` dynamiques (ex: `layout` variable), utilise un template literal :
+```jsx
+data-settings={`{"layout":"${layout}","submenu_icon":{"value":"..."}}`}
+```
+
+Les guillemets à l'intérieur du JSON doivent être échappés : `\\"` dans le template literal.
+
+---
+
+### F. La première image d'une page → `fetchPriority="high"`, les suivantes → `loading="lazy"`
+
+C'est une règle de performance LCP (Largest Contentful Paint).
+
+```jsx
+// Image principale / hero → chargement prioritaire
+<img fetchPriority="high" src="..." />
+
+// Images dans une liste / grille → chargement différé
+{ITEMS.map((item, i) => (
+  <img {...(i === 0 ? { fetchPriority: 'high' } : { loading: 'lazy' })} src={item.img} />
+))}
+```
+
+Attribut : `fetchpriority` en HTML → `fetchPriority` en JSX (camelCase).
+Ne jamais mettre `fetchPriority` et `loading` simultanément sur la même image.
+
+---
+
+### G. Tous les attributs numériques → number JSX, pas string
+
+```jsx
+// ❌ FAUX — string
+tabIndex="-1"
+width="300"
+height="300"
+rowSpan="2"
+
+// ✅ CORRECT pour les attributs qui ACCEPTENT un number
+tabIndex={-1}         // toujours un number
+// EXCEPTION : width et height sur <img> restent strings ou numbers selon le contexte
+// → Copier tel quel depuis le fragment : width="300" height="300" est accepté en JSX
+```
+
+La règle concrète : si l'attribut est `tabIndex`, c'est un number. Pour `width`, `height`,
+`rows`, `cols`, `size` sur les inputs, copier tel quel (React accepte les deux).
+
+---
+
+### H. Les classes de visibilité responsive appartiennent à l'élément parent
+
+`elementor-hidden-mobile`, `elementor-hidden-tablet`, `elementor-hidden-desktop` se trouvent
+toujours sur la section ou la colonne, jamais sur le widget à l'intérieur.
+
+```jsx
+// ❌ FAUX — la classe hide sur le widget enfant
+function NavMenu({ isVertical }) {
+  const cls = isVertical ? 'elementor-hidden-tablet' : '';
+  return <div className={`elementor-widget-nav-menu ${cls}`}>
+
+// ✅ CORRECT — la classe hide sur la colonne parente
+<div className="elementor-column elementor-col-33 elementor-hidden-tablet elementor-hidden-mobile">
+  <NavMenu isVertical={true} />
+</div>
+```
+
+Avant de rendre un élément conditionnel avec une prop, vérifie dans le fragment
+**où exactement** se trouve la classe hide.
+
+---
+
+### I. Entités HTML → caractères réels, jamais d'entités dans le JSX
+
+JSX est compilé en JavaScript, pas parsé comme HTML. Les entités HTML ne sont pas interprétées.
+
+```jsx
+// ❌ FAUX — entités HTML brutes dans JSX
+<span>&bull;</span>       // rendu : "&bull;" (littéral)
+<span>&nbsp;</span>       // rendu : "&nbsp;" (littéral)
+
+// ✅ CORRECT — caractère réel
+<span>{'•'}</span>
+<span>{' '}</span>    // espace insécable
+<span>{'—'}</span>    // em dash
+<span>{'©'}</span>
+```
+
+Exception : `&` dans les URLs (`srcSet`, `href`) → `&` directement (JSX est déjà dans JS).
+
+---
+
+### J. Liens internes et liens externes : règles différentes
+
+```jsx
+import { Link } from 'react-router-dom';
+
+// Lien INTERNE (vers une page du site) → toujours <Link to="...">
+<Link to="/shop">Boutique</Link>
+<Link to="/product">Voir le produit</Link>
+
+// Lien EXTERNE (autre domaine) → <a href> normal avec target
+<a href="https://opensea.io" target="_blank" rel="noopener noreferrer">OpenSea</a>
+
+// Ancre (hash) → <a href="#..."> (React Router laisse passer)
+<a href="#contact">Nous contacter</a>
+
+// Lien mort / placeholder → <a href="/page#"> (copier tel quel du fragment)
+<a href="/authors#" className="elementor-item">Shop</a>
+```
+
+Le mapping routes → chemins est dans `src/App.jsx`.
+
+---
+
+### K. CSS custom properties dans `style` : guillemets autour du nom
+
+```jsx
+// ❌ FAUX — camelCase ne fonctionne pas pour les custom props
+style={{ translateY: '1.5px' }}
+
+// ✅ CORRECT — string key avec tirets
+style={{ '--translateY': '1.5px', transform: 'translateY(var(--translateY))' }}
+
+// Exemple complet tiré de ProductPage
+style={{
+  transform: 'rotateX(var(--rotateX))rotateY(var(--rotateY))',
+  '--rotateX': '-2.9deg',
+  '--rotateY': '-0.8deg'
+}}
+```
+
+---
+
+### L. Attributs SVG : tous en camelCase
+
+```jsx
+// ❌ HTML
+<svg xmlns:xlink="..." stroke-width="2" fill-rule="evenodd" clip-path="url(#a)">
+  <path stroke-linecap="round" />
+</svg>
+
+// ✅ JSX
+<svg xmlnsXlink="..." strokeWidth="2" fillRule="evenodd" clipPath="url(#a)">
+  <path strokeLinecap="round" />
+</svg>
+```
+
+Liste complète fréquente : `strokeWidth`, `strokeLinecap`, `strokeLinejoin`,
+`fillRule`, `clipRule`, `clipPath`, `stopColor`, `stopOpacity`, `xmlnsXlink`.
+
+---
+
+### M. Attributs `aria-*` et `data-*` : NE PAS mettre en camelCase
+
+Contrairement à tous les autres attributs, `aria-*` et `data-*` gardent leur tiret.
+
+```jsx
+// ✅ CORRECT — tirets préservés
+aria-label="Menu principal"
+aria-hidden="true"
+aria-expanded="false"
+data-id="89a4cbb"
+data-element_type="section"
+data-widget_type="heading.default"
+```
+
+---
+
+### N. Attributs générés par JS au runtime : ne pas inclure dans le JSX
+
+Certains attributs sont ajoutés dynamiquement par JavaScript au moment du rendu.
+Les inclure dans le JSX causerait des warnings React ou des conflits.
+
+| Attribut à ignorer | Généré par |
+|---|---|
+| `data-smartmenus-id="..."` | SmartMenus JS |
+| `aria-expanded` sur les menus | SmartMenus JS |
+| `style="position: fixed; width: 1265px"` sur le header sticky | Elementor sticky JS |
+| `class="elementor-sticky--active"` | Elementor sticky JS |
+| `class="e-lazyloaded"` | Elementor lazyload JS |
+| `class="slick-initialized slick-slider"` | Slick JS |
+
+Ces classes/attributs seront ajoutés par le JS Elementor qui tourne dans le navigateur.
+
+---
+
+### O. Vérifier après chaque section, pas à la fin
+
+Convertis une section → `npm run build` → vert → continue.
+
+Si tu convertis toute la page avant de builder et que tu as une erreur JSX,
+retrouver l'origine est beaucoup plus difficile.
+
+Build rouge = stop immédiat, correction avant de continuer.
+
+---
+
+### P. Ne pas supprimer le fragment avant confirmation visuelle
+
+L'ordre correct est :
+1. Écrire le JSX dans la page
+2. Commenter l'import InjectHTML (ne pas encore supprimer)
+3. Activer le return JSX
+4. `npm run build` vert
+5. Vérifier visuellement dans le navigateur (`npm run dev`)
+6. **Seulement après** : supprimer l'import InjectHTML et le fragment
+
+En cas de régression visuelle, tu peux revenir immédiatement à l'injection HTML.
+
+---
+
 ## Pièges fréquents et comment les éviter
 
 ### Piège 1 : `data-settings` converti en objet JS
@@ -434,6 +751,101 @@ srcSet="img.jpg?w=300&h=300 300w"
 <p>{'{'} texte avec accolades {'}'}</p>
 ```
 
+### Piège 7 : `data-e-type` présent mais `data-element_type` manquant
+
+Le fragment Elementor met **les deux** attributs sur chaque élément.
+`data-e-type` seul ne suffit pas — Elementor JS cible `data-element_type` pour initialiser les widgets.
+
+```html
+<!-- HTML source — LES DEUX sont présents -->
+<section data-element_type="section" data-e-type="section">
+<div data-element_type="column" data-e-type="column">
+<div data-element_type="widget" data-e-type="widget">
+```
+```jsx
+// ❌ FAUX — CSS et JS Elementor ne fonctionnent pas
+<section data-e-type="section">
+
+// ✅ CORRECT — copier les deux
+<section data-element_type="section" data-e-type="section">
+```
+
+**Vérification rapide :** cherche `data-e-type` dans ton JSX — chaque occurrence doit
+avoir `data-element_type` juste avant elle.
+
+### Piège 8 : IDs Elementor manquants dans un composant réutilisable
+
+Quand tu crées un composant générique pour un item répété (ex: `AuthorCard`, `ProductCard`),
+chaque instance dans le HTML source a ses propres IDs `elementor-element-XXXXX` et `data-id`.
+
+**Mauvaise approche :** ignorer les IDs car c'est "juste un composant générique"
+
+```jsx
+// ❌ FAUX — tous les auteurs auront les mêmes classes CSS, les règles CSS
+//           spécifiques à chaque carte ne s'appliquent pas
+function AuthorCard({ author }) {
+  return (
+    <section className="elementor-section elementor-inner-section elementor-element">
+```
+
+**Bonne approche :** inclure les IDs dans le tableau de données et les passer en props
+
+```jsx
+// ✅ CORRECT — chaque carte a ses propres IDs exacts du fragment
+const AUTHORS = [
+  { name: 'Lydia Davidson', sId: '82cd3da', lcId: 'fa84781', imgId: '49008fa', ... },
+  { name: 'Janet Arnold',   sId: 'c6b7f25', lcId: 'b53abde', imgId: 'cbe1037', ... },
+];
+
+function AuthorCard({ author }) {
+  return (
+    <section
+      className={`elementor-section elementor-inner-section elementor-element elementor-element-${author.sId}`}
+      data-id={author.sId}
+      data-element_type="section"
+      data-e-type="section"
+    >
+      <div className={`elementor-column ... elementor-element-${author.lcId}`}
+           data-id={author.lcId} data-element_type="column" data-e-type="column">
+```
+
+Chaque widget à l'intérieur (image, titre, icônes, bouton) a également son propre ID unique —
+l'inclure dans l'array de données.
+
+### Piège 9 : `tabIndex` passé comme string au lieu de number
+
+```jsx
+// ❌ FAUX — string "-1" (mauvais type, React génère un warning)
+<a tabIndex="-1">lien</a>
+
+// ✅ CORRECT — number entre accolades
+<a tabIndex={-1}>lien</a>
+```
+
+Même règle pour `tabIndex={0}`. Les attributs HTML numériques → number JSX.
+
+### Piège 10 : Classes hide/show placées sur le mauvais élément
+
+Elementor utilise des classes `elementor-hidden-tablet`, `elementor-hidden-mobile`,
+`elementor-hidden-desktop` pour masquer des éléments selon le viewport.
+Ces classes se trouvent toujours sur la **section ou colonne parente**, jamais sur le widget.
+
+```jsx
+// ❌ FAUX — les classes hide sur le composant nav-menu widget
+function FilterNavMenu({ layout }) {
+  const extraClass = layout === 'vertical' ? ' elementor-hidden-tablet elementor-hidden-mobile' : '';
+  return <div className={`elementor-widget-nav-menu${extraClass}`}>...
+
+// ✅ CORRECT — les classes hide restent sur la COLONNE parente dans AuthorsMain
+<div className="elementor-column elementor-col-33 elementor-hidden-tablet elementor-hidden-mobile"
+     data-id="c1b31d2" data-element_type="column">
+  <FilterNavMenu layout="vertical" />  {/* pas de classe hide ici */}
+</div>
+```
+
+Avant de placer une classe `elementor-hidden-*` dans ton JSX, vérifie sur quel élément
+elle est dans le fragment source.
+
 ---
 
 ## Suppression finale (après TOUTES les pages)
@@ -477,3 +889,4 @@ npm run build
 | `Blog2Page.jsx` | Array `POSTS` en haut, `fetchPriority` conditionnel sur premier item |
 | `Shop2Page.jsx` | Array `PRODUCTS` avec flag `hot`, emojis mojibake corrigés |
 | `ProductPage.jsx` | CSS custom props complexes, `children` prop pour commentaires imbriqués |
+| `AuthorsPage.jsx` | IDs Elementor par item dans l'array de données, composant `AuthorCard` paramétré, `tabIndex={-1}` |
