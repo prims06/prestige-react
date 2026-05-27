@@ -1,35 +1,55 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout.jsx';
-import HomePage from './pages/HomePage.jsx';
-import Home2Page from './pages/Home2Page.jsx';
-import AboutPage from './pages/AboutPage.jsx';
-import BlogPage from './pages/BlogPage.jsx';
-import Blog2Page from './pages/Blog2Page.jsx';
-import ShopPage from './pages/ShopPage.jsx';
-import Shop2Page from './pages/Shop2Page.jsx';
-import ProductPage from './pages/ProductPage.jsx';
-import ContactsPage from './pages/ContactsPage.jsx';
-import AuthorsPage from './pages/AuthorsPage.jsx';
-import LoginPage from './pages/LoginPage.jsx';
-import NotFoundPage from './pages/NotFoundPage.jsx';
+
+const HomePage      = lazy(() => import('./pages/HomePage.jsx'));
+const Home2Page     = lazy(() => import('./pages/Home2Page.jsx'));
+const AboutPage     = lazy(() => import('./pages/AboutPage.jsx'));
+const BlogPage      = lazy(() => import('./pages/BlogPage.jsx'));
+const Blog2Page     = lazy(() => import('./pages/Blog2Page.jsx'));
+const ShopPage      = lazy(() => import('./pages/ShopPage.jsx'));
+const Shop2Page     = lazy(() => import('./pages/Shop2Page.jsx'));
+const ProductPage   = lazy(() => import('./pages/ProductPage.jsx'));
+const ContactsPage  = lazy(() => import('./pages/ContactsPage.jsx'));
+const AuthorsPage   = lazy(() => import('./pages/AuthorsPage.jsx'));
+const LoginPage            = lazy(() => import('./pages/LoginPage.jsx'));
+const RegisterPage         = lazy(() => import('./pages/RegisterPage.jsx'));
+const ForgotPasswordPage   = lazy(() => import('./pages/ForgotPasswordPage.jsx'));
+const ResetPasswordPage    = lazy(() => import('./pages/ResetPasswordPage.jsx'));
+const VerifyOtpPage        = lazy(() => import('./pages/VerifyOtpPage.jsx'));
+const NotFoundPage         = lazy(() => import('./pages/NotFoundPage.jsx'));
+
+function PageLoader() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+      <div className="xchain-page-loader" />
+    </div>
+  );
+}
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/home-2" element={<Home2Page />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/blog" element={<BlogPage />} />
-        <Route path="/blog-2" element={<Blog2Page />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/shop-2" element={<Shop2Page />} />
-        <Route path="/product" element={<ProductPage />} />
-        <Route path="/contacts" element={<ContactsPage />} />
-        <Route path="/authors" element={<AuthorsPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/"         element={<HomePage />} />
+          <Route path="/home-2"   element={<Home2Page />} />
+          <Route path="/about"    element={<AboutPage />} />
+          <Route path="/blog"     element={<BlogPage />} />
+          <Route path="/blog-2"   element={<Blog2Page />} />
+          <Route path="/shop"     element={<ShopPage />} />
+          <Route path="/shop-2"   element={<Shop2Page />} />
+          <Route path="/product"  element={<ProductPage />} />
+          <Route path="/contacts" element={<ContactsPage />} />
+          <Route path="/authors"  element={<AuthorsPage />} />
+          <Route path="/login"            element={<LoginPage />} />
+          <Route path="/register"         element={<RegisterPage />} />
+          <Route path="/forgot-password"  element={<ForgotPasswordPage />} />
+          <Route path="/reset-password"   element={<ResetPasswordPage />} />
+          <Route path="/verify-otp"       element={<VerifyOtpPage />} />
+          <Route path="*"                 element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 }

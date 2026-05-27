@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { authApi } from '../api/modules/auth';
-import { tokenStorage } from '../api/client';
 import { useAsync } from './useAsync';
 
 export function useAuth() {
@@ -15,11 +14,21 @@ export function useAuth() {
       return data;
     }), [execute, setSession]);
 
+  // register may return tokens directly (auto-login) or just a message (OTP flow)
   const register = useCallback((params) =>
-    execute(() => authApi.register(params)), [execute]);
+    execute(async () => {
+      const data = await authApi.register(params);
+      if (data?.accessToken) setSession(data);
+      return data;
+    }), [execute, setSession]);
 
+  // verifyOtp may return tokens after email verification
   const verifyOtp = useCallback((params) =>
-    execute(() => authApi.verifyOtp(params)), [execute]);
+    execute(async () => {
+      const data = await authApi.verifyOtp(params);
+      if (data?.accessToken) setSession(data);
+      return data;
+    }), [execute, setSession]);
 
   const sendOtp = useCallback((params) =>
     execute(() => authApi.sendOtp(params)), [execute]);

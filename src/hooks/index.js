@@ -5,3 +5,5 @@ export { useFileUpload }      from './useFileUpload';
 export { usePrestigeSocket }  from './usePrestigeSocket';
 export { useConversation }    from './useConversation';
 export { useInfinitePage }    from './useInfinitePage';
+export { useCarousel }        from './useCarousel';
+export { useIntersection }    from './useIntersection';

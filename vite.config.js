@@ -20,8 +20,6 @@ function readFragment(name) {
   }
 }
 
-// Inject aggregated stylesheets/style blocks into <head>, and the original
-// site's script tags right before </body> so they run after React renders.
 function injectAggregatedAssets() {
   return {
     name: 'inject-aggregated-assets',
@@ -37,8 +35,37 @@ function injectAggregatedAssets() {
 
 export default defineConfig({
   plugins: [react(), injectAggregatedAssets()],
+
   server: {
     port: 5173,
-    open: true
-  }
+    open: true,
+  },
+
+  build: {
+    // Warn only above 1 MB (default 500 kB is noisy for this template)
+    chunkSizeWarningLimit: 1000,
+
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // React core — tiny, always needed
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+            return 'vendor-react';
+          }
+          // Router
+          if (id.includes('node_modules/react-router')) {
+            return 'vendor-router';
+          }
+          // State / sockets — loaded only when features are used
+          if (id.includes('node_modules/zustand') || id.includes('node_modules/socket.io-client')) {
+            return 'vendor-state';
+          }
+          // Icons — can be large
+          if (id.includes('node_modules/lucide-react')) {
+            return 'vendor-icons';
+          }
+        },
+      },
+    },
+  },
 });
