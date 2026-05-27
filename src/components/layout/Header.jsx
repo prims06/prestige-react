@@ -1,5 +1,14 @@
 import { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { User } from 'lucide-react';
+
+function ProfileButton() {
+  return (
+    <Link to="/login" className="xc-profile-btn" aria-label="Profil utilisateur">
+      <User size={24} strokeWidth={1} />
+    </Link>
+  );
+}
 
 const NAV_ITEMS = [
   { id: 5551, label: 'Home', to: '/', children: [
@@ -215,7 +224,7 @@ function DesktopNavSection({ isSpacerRef, pathname }) {
                   </div>
                 </div>
                 <div className="elementor-column elementor-col-50 elementor-inner-column elementor-element elementor-element-f0c7eb3" data-id="f0c7eb3" data-element_type="column" data-e-type="column" data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
-                  <div className="elementor-widget-wrap elementor-element-populated">
+                  {/* <div className="elementor-widget-wrap elementor-element-populated" style={{ display: 'flex', alignItems: 'center' }}>
                     <div className="elementor-element elementor-element-0175cca elementor-widget__width-auto elementor-widget elementor-widget-button" data-id="0175cca" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
                       <div className="elementor-widget-container">
                         <div className="elementor-button-wrapper">
@@ -225,8 +234,9 @@ function DesktopNavSection({ isSpacerRef, pathname }) {
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                    
+                  </div> */}
+                </div><ProfileButton />
               </div>
             </section>
           </div>
@@ -277,7 +287,7 @@ function TabletNavSection({ isSpacerRef }) {
         </div>
         {/* Connect + hamburger */}
         <div className="elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-84d6087" data-id="84d6087" data-element_type="column" data-e-type="column" data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
-          <div className="elementor-widget-wrap elementor-element-populated">
+          <div className="elementor-widget-wrap elementor-element-populated" style={{ display: 'flex', alignItems: 'center' }}>
             <div className="elementor-element elementor-element-1aa0967 elementor-widget__width-auto elementor-widget elementor-widget-button" data-id="1aa0967" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
               <div className="elementor-widget-container">
                 <div className="elementor-button-wrapper">
@@ -287,6 +297,7 @@ function TabletNavSection({ isSpacerRef }) {
                 </div>
               </div>
             </div>
+            <ProfileButton />
             <div className="elementor-element elementor-element-a991583 elementor-widget-mobile__width-auto elementor-widget-tablet__width-auto elementor-view-default elementor-widget elementor-widget-icon" data-id="a991583" data-element_type="widget" data-e-type="widget" data-widget_type="icon.default">
               <div className="elementor-widget-container">
                 <div className="elementor-icon-wrapper">

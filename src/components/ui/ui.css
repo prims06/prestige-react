@@ -1,0 +1,429 @@
+/* ─────────────────────────────────────────────────────────────
+   UI primitives — complementent le theme Elementor existant
+   Prefixe xchain-* pour ne pas entrer en conflit avec le CSS Elementor.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --xc-bg-card:        rgba(255, 255, 255, 0.04);
+  --xc-bg-hover:       rgba(255, 255, 255, 0.08);
+  --xc-border:         rgba(255, 255, 255, 0.10);
+  --xc-border-strong:  rgba(255, 255, 255, 0.20);
+  --xc-text:           #ffffff;
+  --xc-text-muted:     rgba(255, 255, 255, 0.65);
+  --xc-text-faint:     rgba(255, 255, 255, 0.45);
+  --xc-accent:         #b3ff4f; /* vert lime du theme */
+  --xc-accent-fg:      #000;
+  --xc-success:        #2ecc71;
+  --xc-warn:           #f5c518;
+  --xc-danger:         #e74c3c;
+  --xc-info:           #3498db;
+  --xc-radius:         10px;
+  --xc-radius-sm:      6px;
+  --xc-shadow:         0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes xc-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes xc-toast-in {
+  from { transform: translateY(-12px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+@keyframes xc-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Badge ─── */
+.xc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  line-height: 1;
+  white-space: nowrap;
+}
+.xc-badge--pending   { background: rgba(245, 197, 24, 0.15); color: var(--xc-warn);    border-color: rgba(245, 197, 24, 0.35); }
+.xc-badge--approved,
+.xc-badge--active    { background: rgba(46, 204, 113, 0.15); color: var(--xc-success); border-color: rgba(46, 204, 113, 0.35); }
+.xc-badge--rejected  { background: rgba(231, 76, 60, 0.15);  color: var(--xc-danger);  border-color: rgba(231, 76, 60, 0.35); }
+.xc-badge--suspended { background: rgba(255, 255, 255, 0.08); color: var(--xc-text-muted); border-color: var(--xc-border); }
+.xc-badge--expired   { background: rgba(255, 255, 255, 0.04); color: var(--xc-text-faint); border-color: var(--xc-border); }
+
+/* ─── Avatar ─── */
+.xc-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #2a2a2a, #444);
+  color: var(--xc-text);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  border: 1px solid var(--xc-border);
+}
+.xc-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.xc-avatar--sm { width: 32px;  height: 32px;  font-size: 12px; }
+.xc-avatar--md { width: 48px;  height: 48px;  font-size: 16px; }
+.xc-avatar--lg { width: 72px;  height: 72px;  font-size: 22px; }
+.xc-avatar--xl { width: 120px; height: 120px; font-size: 36px; }
+
+/* ─── Spinner ─── */
+.xc-spinner {
+  display: inline-block;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.18);
+  border-top-color: var(--xc-accent);
+  animation: xc-spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+.xc-spinner--sm { width: 16px; height: 16px; border-width: 2px; }
+.xc-spinner--md { width: 28px; height: 28px; border-width: 3px; }
+.xc-spinner--lg { width: 48px; height: 48px; border-width: 4px; }
+.xc-spinner--xl { width: 72px; height: 72px; border-width: 6px; }
+
+/* ─── EmptyState ─── */
+.xc-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--xc-text-muted);
+}
+.xc-empty__icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: var(--xc-text-faint);
+  display: flex;
+  justify-content: center;
+}
+.xc-empty__title {
+  color: var(--xc-text);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.xc-empty__desc {
+  font-size: 14px;
+  max-width: 380px;
+  margin: 0 auto 20px;
+  line-height: 1.5;
+}
+
+/* ─── Toast ─── */
+.xc-toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.xc-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 280px;
+  max-width: 420px;
+  padding: 12px 16px;
+  border-radius: var(--xc-radius);
+  background: #181818;
+  color: var(--xc-text);
+  border: 1px solid var(--xc-border);
+  box-shadow: var(--xc-shadow);
+  animation: xc-toast-in 0.25s ease-out;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.xc-toast--success { border-left: 3px solid var(--xc-success); }
+.xc-toast--error   { border-left: 3px solid var(--xc-danger); }
+.xc-toast--info    { border-left: 3px solid var(--xc-info); }
+
+/* icon-only "click target" — pas un <button>, pour eviter les styles
+   herites des boutons globaux (elementor / theme). Utilise <span>. */
+.xc-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--xc-text-faint);
+  background: transparent;
+  border: none;
+  padding: 4px;
+  margin: 0;
+  line-height: 0;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.xc-icon-btn:hover { color: var(--xc-text); }
+.xc-icon-btn:focus-visible { outline: 1px solid var(--xc-text-faint); outline-offset: 2px; border-radius: 4px; }
+
+.xc-toast__close { margin-left: auto; }
+
+/* ─── Profile button (cercle outline avec icone utilisateur) ─── */
+.xc-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--xc-border-strong);
+  color: var(--xc-text);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  text-decoration: none;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+.xc-profile-btn:hover,
+.xc-profile-btn:focus {
+  border-color: var(--e-global-color-accent);
+  color: var(--e-global-color-accent);
+}
+
+/* ─── InfiniteScrollTrigger ─── */
+.xc-infinite {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 0;
+  min-height: 48px;
+  color: var(--xc-text-faint);
+  font-size: 13px;
+}
+.xc-infinite__end {
+  font-size: 12px;
+  color: var(--xc-text-faint);
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* ─── MediaViewer ─── */
+.xc-mv {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: xc-fade-in 0.2s ease-out;
+}
+.xc-mv__close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 8px;
+}
+.xc-mv__close:hover { color: #fff; }
+.xc-mv__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 12px;
+}
+.xc-mv__nav:hover { color: #fff; }
+.xc-mv__nav--prev { left: 24px; }
+.xc-mv__nav--next { right: 24px; }
+.xc-mv__stage {
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.xc-mv__stage img,
+.xc-mv__stage video {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: var(--xc-radius);
+}
+.xc-mv__counter {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--xc-text-muted);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+/* ─── Tabs (inspire des wc-tabs WooCommerce du ProductPage) ─── */
+.xc-tabs__bar {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  border-bottom: 1px solid var(--xc-border);
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.xc-tabs__bar::-webkit-scrollbar { display: none; }
+.xc-tabs__tab {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  color: var(--xc-text-muted);
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.2s;
+  user-select: none;
+}
+.xc-tabs__tab + .xc-tabs__tab { border-left: 1px solid var(--xc-border); }
+.xc-tabs__tab:hover { color: var(--xc-text); }
+.xc-tabs__tab--active {
+  color: var(--xc-text);
+}
+.xc-tabs__tab--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--xc-accent);
+}
+.xc-tabs__panel { animation: xc-fade-in 0.2s ease-out; }
+
+/* ─── ConfirmDialog (head / body / footer separes par dividers) ─── */
+.xc-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: xc-fade-in 0.2s ease-out;
+}
+.xc-dialog {
+  background: #181818;
+  border: 1px solid var(--xc-border);
+  border-radius: var(--xc-radius);
+  max-width: 460px;
+  width: 100%;
+  box-shadow: var(--xc-shadow);
+  color: var(--xc-text);
+  overflow: hidden;
+}
+.xc-dialog__head {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--xc-border);
+}
+.xc-dialog__title {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--xc-text);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.xc-dialog__body {
+  padding: 22px 24px;
+}
+.xc-dialog__message {
+  font-size: 14px;
+  color: var(--xc-text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+.xc-dialog__foot {
+  padding: 16px 24px;
+  border-top: 1px solid var(--xc-border);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* xc-btn — boutons d'action (form / dialog). Pas le meme idiome qu'un icon-btn. */
+.xc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, filter 0.2s;
+  text-decoration: none;
+  line-height: 1.2;
+}
+.xc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.xc-btn--primary {
+  background: var(--xc-accent);
+  color: var(--xc-accent-fg);
+}
+.xc-btn--primary:hover:not(:disabled) { filter: brightness(1.08); }
+
+/* Outline neutre */
+.xc-btn--outline {
+  background: transparent;
+  color: var(--xc-text);
+  border-color: var(--xc-border-strong);
+}
+.xc-btn--outline:hover:not(:disabled) {
+  border-color: var(--xc-text);
+}
+
+/* Outline rouge — etat de repos = teinte legere + texte/bordure rouge clair (lisible) */
+.xc-btn--outline-danger {
+  background: rgba(231, 76, 60, 0.10);
+  color: #ff6b5e;
+  border-color: #ff6b5e;
+}
+.xc-btn--outline-danger:hover:not(:disabled) {
+  background: rgba(231, 76, 60, 0.20);
+  color: #ff8a80;
+  border-color: #ff8a80;
+}
+
+/* Cancel — utilise la structure elementor-button native (meme look que
+   "Place a bid" sur ProductPage) avec un override rouge. */
+.xc-elementor-cancel .elementor-button {
+  background: transparent !important;
+  background-image: none !important;
+  text-decoration: none !important;
+  /* color: #ff5252 !important; */
+  border: 1px solid var(--xc-border-strong) !important;
+  /* fill: #ff5252 !important; */
+}
+.xc-elementor-cancel .elementor-button:hover,
+.xc-elementor-cancel .elementor-button:focus {
+  background: transparent !important;
+  background-image: none !important;
+  color: #ff7a7a !important;
+  border-color: #ff5252 !important;
+}
+.xc-elementor-cancel--disabled { pointer-events: none; opacity: 0.5; }
+
+/* Bouton danger plein (pour les CTA destructifs primary) */
+.xc-btn--danger {
+  background: var(--xc-danger);
+  color: #fff;
+}
+.xc-btn--danger:hover:not(:disabled) { filter: brightness(1.08); }
