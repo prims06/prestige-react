@@ -7,13 +7,17 @@ import { dirname, join } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function readFragment(name) {
-  const txt = readFileSync(join(__dirname, 'src', 'fragments', name), 'utf8');
-  const m = txt.match(/export default `([\s\S]*)`;\s*$/);
-  if (!m) return '';
-  return m[1]
-    .replace(/\\`/g, '`')
-    .replace(/\\\$\{/g, '${')
-    .replace(/\\\\/g, '\\');
+  try {
+    const txt = readFileSync(join(__dirname, 'src', 'fragments', name), 'utf8');
+    const m = txt.match(/export default `([\s\S]*)`;\s*$/);
+    if (!m) return '';
+    return m[1]
+      .replace(/\\`/g, '`')
+      .replace(/\\\$\{/g, '${')
+      .replace(/\\\\/g, '\\');
+  } catch {
+    return '';
+  }
 }
 
 // Inject aggregated stylesheets/style blocks into <head>, and the original
