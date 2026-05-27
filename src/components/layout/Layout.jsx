@@ -3,8 +3,6 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 
-// Each Elementor-exported page used a different `elementor-page-<id>` class
-// on <body>. Per-page CSS selectors depend on these — toggle on route change.
 const PAGE_CLASSES = {
   '/':         ['home', 'wp-singular', 'page-template', 'page-template-elementor_header_footer', 'page', 'page-id-5548', 'elementor-page-5548'],
   '/home-2':   ['wp-singular', 'single', 'single-envato_tk_templates', 'postid-18', 'elementor-page-18'],
@@ -27,9 +25,6 @@ export default function Layout() {
     const classes = PAGE_CLASSES[pathname] || NOT_FOUND_CLASSES;
     document.body.classList.add(...classes);
 
-    // Fire the events that the original site's jQuery/Elementor plugins
-    // listen for, so widgets in the newly-mounted page DOM discover their
-    // targets. Wrapped in rAF so React's commit lands first.
     requestAnimationFrame(() => {
       document.querySelectorAll('.e-con.e-parent').forEach((el) => {
         el.classList.add('e-lazyloaded');

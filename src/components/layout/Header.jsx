@@ -247,7 +247,7 @@ function TabletNavSection({ isSpacerRef }) {
   ].join(' ');
   const sectionStyle = isSpacerRef
     ? { visibility: 'hidden', transition: 'none', animation: 'auto ease 0s 1 normal none running none' }
-    : { position: 'fixed', marginTop: 0, marginBottom: 0, top: 0 };
+    : { position: 'fixed', marginTop: 0, marginBottom: 0, top: 0, width: '100%' };
 
   return (
     <section

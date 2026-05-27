@@ -97,24 +97,18 @@ export default function Footer() {
                data-settings='{"mdp_selection_sticky_effect_enable":false}'>
         <div className="elementor-container elementor-column-gap-no">
 
-          {/* Col gauche — logo mobile + texte + newsletter */}
           <div className="elementor-column elementor-col-50 elementor-top-column elementor-element elementor-element-1ac23b5"
                data-id="1ac23b5" data-element_type="column" data-e-type="column"
                data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
             <div className="elementor-widget-wrap elementor-element-populated">
 
-              {/* Logo visible uniquement mobile */}
               <div className="elementor-element elementor-element-0e32c0f elementor-widget__width-auto elementor-widget-mobile__width-inherit elementor-hidden-desktop elementor-hidden-tablet elementor-widget elementor-widget-theme-site-logo elementor-widget-image"
                    data-id="0e32c0f" data-element_type="widget" data-e-type="widget" data-widget_type="theme-site-logo.default">
                 <div className="elementor-widget-container">
-                  <a href="/">
-                    <img width="133" height="38" src="/images/cropped-logo.png"
-                         className="attachment-full size-full wp-image-4737" alt="" />
-                  </a>
+                  <a href="/"><img width="133" height="38" src="/images/cropped-logo.png" className="attachment-full size-full wp-image-4737" alt="" /></a>
                 </div>
               </div>
 
-              {/* Texte description — mobile only */}
               <div className="elementor-element elementor-element-ba43388 elementor-hidden-desktop elementor-hidden-tablet elementor-widget elementor-widget-text-editor"
                    data-id="ba43388" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
                 <div className="elementor-widget-container">
@@ -122,7 +116,6 @@ export default function Footer() {
                 </div>
               </div>
 
-              {/* Heading newsletter */}
               <div className="elementor-element elementor-element-6472565 elementor-widget elementor-widget-heading"
                    data-id="6472565" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
                 <div className="elementor-widget-container">
@@ -130,7 +123,6 @@ export default function Footer() {
                 </div>
               </div>
 
-              {/* Formulaire email */}
               <div className="elementor-element elementor-element-5b1f80c elementor-button-align-start elementor-mobile-button-align-stretch elementor-widget elementor-widget-form"
                    data-id="5b1f80c" data-element_type="widget" data-e-type="widget"
                    data-settings='{"button_width":"25","step_type":"number_text","step_icon_shape":"circle"}'
@@ -163,7 +155,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Col droite — icônes sociales */}
           <div className="elementor-column elementor-col-50 elementor-top-column elementor-element elementor-element-4b33557"
                data-id="4b33557" data-element_type="column" data-e-type="column"
                data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
@@ -199,13 +190,12 @@ export default function Footer() {
         </div>
       </section>
 
-      {/* Section 2 — logo desktop + menus de navigation */}
+      {/* Section 2 — logo desktop + nav menus */}
       <section className="elementor-section elementor-top-section elementor-element elementor-element-957b0b5 elementor-section-boxed elementor-section-height-default"
                data-id="957b0b5" data-element_type="section" data-e-type="section"
                data-settings='{"mdp_selection_sticky_effect_enable":false}'>
         <div className="elementor-container elementor-column-gap-no">
 
-          {/* Col gauche — logo + texte, caché sur mobile */}
           <div className="elementor-column elementor-col-50 elementor-top-column elementor-element elementor-element-b9d4667 elementor-hidden-mobile"
                data-id="b9d4667" data-element_type="column" data-e-type="column"
                data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
@@ -214,10 +204,7 @@ export default function Footer() {
               <div className="elementor-element elementor-element-cbd1282 elementor-widget__width-auto elementor-widget elementor-widget-theme-site-logo elementor-widget-image"
                    data-id="cbd1282" data-element_type="widget" data-e-type="widget" data-widget_type="theme-site-logo.default">
                 <div className="elementor-widget-container">
-                  <a href="/">
-                    <img width="133" height="38" src="/images/cropped-logo.png"
-                         className="attachment-full size-full wp-image-4737" alt="" loading="lazy" />
-                  </a>
+                  <a href="/"><img width="133" height="38" src="/images/cropped-logo.png" className="attachment-full size-full wp-image-4737" alt="" loading="lazy" /></a>
                 </div>
               </div>
 
@@ -231,7 +218,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Col droite — 3 menus verticaux */}
           <div className="elementor-column elementor-col-50 elementor-top-column elementor-element elementor-element-3891228"
                data-id="3891228" data-element_type="column" data-e-type="column"
                data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
@@ -253,7 +239,7 @@ export default function Footer() {
         </div>
       </section>
 
-      {/* Section 3 — copyright + liens légaux */}
+      {/* Section 3 — copyright + legal links */}
       <section className="elementor-section elementor-top-section elementor-element elementor-element-7890a5e elementor-section-content-middle elementor-section-boxed elementor-section-height-default"
                data-id="7890a5e" data-element_type="section" data-e-type="section"
                data-settings='{"mdp_selection_sticky_effect_enable":false}'>
