@@ -193,6 +193,52 @@
   color: var(--e-global-color-accent);
 }
 
+/* Wrapper du bouton profil. Le wrap porte la classe .elementor-element-1eeb09b
+   (meme que la nav-menu widget) pour que les styles CSS scopes
+   `.elementor-80 .elementor-element-1eeb09b .elementor-nav-menu--dropdown ...`
+   s'appliquent au submenu profil exactement comme aux submenus de nav. */
+.xc-profile-wrap {
+  position: relative;
+  margin-left: 10px;
+  display: inline-flex;
+  align-items: center;
+}
+.xc-profile-wrap .xc-profile-btn { margin-left: 0; }
+
+/* Positionnement absolu du dropdown profil sous le bouton */
+.xc-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  z-index: 1000;
+}
+.xc-profile-dropdown > .elementor-nav-menu { list-style: none; margin: 0; padding: 0; }
+.xc-profile-dropdown .menu-item-has-children { list-style: none; }
+
+/* Boutons prev/next du HeroSection (home-2) — meme look que xc-profile-btn,
+   positionnement absolu sur les bords du carousel. */
+.xchain-hero-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  margin: 0;
+}
+.xchain-hero-nav--prev { left: 16px; }
+.xchain-hero-nav--next { right: 16px; }
+
+/* Hauteur dynamique des slides du HeroSection (home-2) */
+.xchain-hero-slide-bg { min-height: 600px; }
+@media (max-width: 1024px) {
+  .xchain-hero-slide-bg { min-height: 380px; }
+}
+@media (max-width: 767px) {
+  .xchain-hero-slide-bg { min-height: 320px; }
+  .xchain-hero-nav--prev { left: 8px; }
+  .xchain-hero-nav--next { right: 8px; }
+}
+
 /* ─── InfiniteScrollTrigger ─── */
 .xc-infinite {
   display: flex;

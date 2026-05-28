@@ -14,7 +14,8 @@ const PAGE_CLASSES = {
   '/product':  ['wp-singular', 'product-template-default', 'single', 'single-product', 'postid-214', 'woocommerce', 'woocommerce-page', 'elementor-page-1614'],
   '/contacts': ['wp-singular', 'single', 'single-envato_tk_templates', 'postid-422', 'elementor-page-422'],
   '/authors':  ['wp-singular', 'single', 'single-envato_tk_templates', 'postid-411', 'elementor-page-411'],
-  '/login':    ['wp-singular', 'single', 'single-envato_tk_templates', 'postid-415', 'elementor-page-415']
+  '/login':    ['wp-singular', 'single', 'single-envato_tk_templates', 'postid-415', 'elementor-page-415'],
+  '/profile':  ['wp-singular', 'single', 'single-envato_tk_templates', 'postid-411', 'elementor-page-411']
 };
 const NOT_FOUND_CLASSES = ['error404', 'elementor-page-2246'];
 

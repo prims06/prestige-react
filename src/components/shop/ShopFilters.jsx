@@ -61,6 +61,69 @@ export function DesktopDivider({ dataId }) {
   );
 }
 
+/**
+ * Variante cliquable de FilterNavVertical — structure IDENTIQUE
+ * (memes classes, meme dataId, memes menuIds, meme double-nav main/dropdown)
+ * pour heriter du CSS Elementor scope a `.elementor-element-{dataId}`.
+ * Seule difference : <a href="#" onClick> au lieu de <Link to>.
+ *
+ * - items: array de { value, label } ou de strings
+ * - menuIds: ids appliques aux <li> (menu-item-{id}) pour matcher le CSS theme
+ * - activeValue: valeur courante (ajoute .elementor-item-active)
+ */
+export function FilterNavClickList({ dataId, items, menuIds = [], activeValue, onItemClick }) {
+  const menu1Id = `menu-1-${dataId}`;
+  const menu2Id = `menu-2-${dataId}`;
+  const normalized = items.map((it) =>
+    typeof it === 'string' ? { value: it, label: it } : it
+  );
+  return (
+    <div
+      className={`elementor-element elementor-element-${dataId} elementor-nav-menu__align-start elementor-nav-menu--dropdown-none elementor-hidden-tablet elementor-hidden-mobile elementor-widget elementor-widget-nav-menu`}
+      data-id={dataId} data-element_type="widget" data-e-type="widget"
+      data-settings='{"layout":"vertical","submenu_icon":{"value":"<i class=\"\" aria-hidden=\"true\"><\/i>","library":""}}'
+      data-widget_type="nav-menu.default"
+    >
+      <div className="elementor-widget-container">
+        <nav aria-label="Menu" className="elementor-nav-menu--main elementor-nav-menu__container elementor-nav-menu--layout-vertical e--pointer-background e--animation-fade">
+          <ul id={menu1Id} className="elementor-nav-menu sm-vertical">
+            {normalized.map((it, i) => {
+              const isActive = it.value === activeValue;
+              const linkCls = `elementor-item elementor-item-anchor${isActive ? ' elementor-item-active' : ''}`;
+              const liId = menuIds[i] ?? `${dataId}-${i}`;
+              return (
+                <li key={it.value || '__all'} className={`menu-item menu-item-type-custom menu-item-object-custom menu-item-${liId}`}>
+                  <a
+                    href="#"
+                    className={linkCls}
+                    onClick={(e) => { e.preventDefault(); onItemClick(it.value); }}
+                  >
+                    {it.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+        <nav className="elementor-nav-menu--dropdown elementor-nav-menu__container" aria-hidden="true" style={{ '--menu-height': 0 }}>
+          <ul id={menu2Id} className="elementor-nav-menu sm-vertical">
+            {normalized.map((it, i) => {
+              const liId = menuIds[i] ?? `${dataId}-${i}`;
+              return (
+                <li key={it.value || '__all'} className={`menu-item menu-item-type-custom menu-item-object-custom menu-item-${liId}`}>
+                  <a href="#" className="elementor-item elementor-item-anchor" tabIndex={-1}>
+                    {it.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  );
+}
+
 export function FilterNavVertical({ dataId, items, menuIds, href = '/shop' }) {
   const menu1Id = `menu-1-${dataId}`;
   const menu2Id = `menu-2-${dataId}`;

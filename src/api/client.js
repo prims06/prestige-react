@@ -3,6 +3,26 @@ import { ApiError } from './ApiError';
 const BASE_URL          = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 const REQUEST_TIMEOUT   = 15_000;
 
+// Origine du backend (sans /api/v1) pour resoudre les URLs de fichiers
+// renvoyees par le backend en chemin relatif (`/api/v1/files/{id}/stream`).
+function backendOrigin() {
+  try {
+    const u = new URL(BASE_URL);
+    return `${u.protocol}//${u.host}`;
+  } catch {
+    return BASE_URL.replace(/\/api\/v\d+\/?$/, '');
+  }
+}
+
+/** Resout une URL media renvoyee par le backend en URL absolue utilisable
+ *  par le navigateur. Si l'URL est deja absolue (http/https) on la retourne
+ *  telle quelle. */
+export function resolveMediaUrl(url) {
+  if (!url) return null;
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${backendOrigin()}${url.startsWith('/') ? url : `/${url}`}`;
+}
+
 const ACCESS_KEY  = 'PRESTIGE_ACCESS_TOKEN';
 const REFRESH_KEY = 'PRESTIGE_REFRESH_TOKEN';
 

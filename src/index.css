@@ -10,3 +10,19 @@
   border-radius: 50%;
   animation: xchain-spin 0.7s linear infinite;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Capitalize global sur les textes du site.
+   Heritage : les elements qui posent leur propre text-transform
+   (boutons elementor en uppercase, headings avec var(--e-global-...),
+   inputs/email/code) conservent leur style. */
+body {
+  text-transform: capitalize;
+}
+/* Exceptions : ne pas capitaliser ce qui doit rester intact */
+input, textarea, select, code, pre, kbd, samp,
+.elementor-search-form__input,
+a[href^="mailto:"], a[href^="tel:"],
+.woocommerce-Price-currencySymbol {
+  text-transform: none;
+}

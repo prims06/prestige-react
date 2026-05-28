@@ -1,45 +1,102 @@
 import { Link } from 'react-router-dom';
+import { resolveMediaUrl } from '../../api/client';
 
-export default function ProductCard({ product }) {
+// ─────────────────────────────────────────────────────────────
+// ANCIENNE VERSION (NFT marketplace) — gardee pour rollback
+// ─────────────────────────────────────────────────────────────
+// export default function ProductCard({ product }) {
+//   return (
+//     <li className={product.liCls}>
+//       <div className="premium-woo-product-wrapper premium-con-lq__none">
+//         <div className="premium-woo-product-thumbnail">
+//           {product.hot && (
+//             <div className="premium-woo-ribbon-container">
+//               <div className="premium-woo-product-featured-wrap">
+//                 <span className="premium-woo-product-featured">Hot</span>
+//               </div>
+//             </div>
+//           )}
+//           <Link to="/product" className="woocommerce-LoopProduct-link woocommerce-loop-product__link">
+//             <img src={product.img} alt="" />
+//           </Link>
+//           <div className="premium-woo-qv-data" data-product-id={product.id}></div>
+//         </div>
+//         <div className="premium-woo-products-details-wrap">
+//           <span className="premium-woo-product-category">{product.cat}</span>
+//           <Link to="/product" className="premium-woo-product__link">
+//             <h2 className="woocommerce-loop-product__title">{product.name}</h2>
+//           </Link>
+//           <span className="price">
+//             <span className="woocommerce-Price-amount amount">
+//               <bdi><span className="woocommerce-Price-currencySymbol">$</span>{product.price.replace('$', '')}</bdi>
+//             </span>
+//           </span>
+//           <div className="premium-woo-product-actions-wrapper">
+//             <div className="premium-woo-atc-button" data-variations={JSON.stringify('true')}>
+//               <Link
+//                 to="/shop"
+//                 aria-describedby={`woocommerce_loop_add_to_cart_link_describedby_${product.id}`}
+//                 data-quantity="1"
+//                 className="button product_type_external"
+//                 data-product_id={product.id}
+//                 data-product_sku={product.sku}
+//                 aria-label="Buy now"
+//                 rel="nofollow"
+//               >Buy now</Link>
+//               <span id={`woocommerce_loop_add_to_cart_link_describedby_${product.id}`} className="screen-reader-text"></span>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </li>
+//   );
+// }
+
+const PLACEHOLDER_IMG = '/images/shop/anunay-rai-awMWm6ayLTc-unsplash-600x600.jpg';
+
+function formatXaf(n) {
+  if (n == null) return '—';
+  return `${Number(n).toLocaleString('fr-FR')} XAF`;
+}
+
+// Nouvelle version : carte de service Prestige (catalog)
+// service = { id, title, description, priceXaf, escort: { displayName, city, avatarUrl, tags } }
+export default function ProductCard({ service, position = '' }) {
+  const s = service ?? {};
+  const e = s.escort ?? {};
+  const img = resolveMediaUrl(e.avatarUrl) || PLACEHOLDER_IMG;
+  const liCls = `product ${position} instock product-type-external`.trim();
+
   return (
-    <li className={product.liCls}>
+    <li className={liCls}>
       <div className="premium-woo-product-wrapper premium-con-lq__none">
         <div className="premium-woo-product-thumbnail">
-          {product.hot && (
-            <div className="premium-woo-ribbon-container">
-              <div className="premium-woo-product-featured-wrap">
-                <span className="premium-woo-product-featured">Hot</span>
-              </div>
-            </div>
-          )}
-          <Link to="/product" className="woocommerce-LoopProduct-link woocommerce-loop-product__link">
-            <img src={product.img} alt="" />
+          <Link to={`/product?id=${s.id}`} className="woocommerce-LoopProduct-link woocommerce-loop-product__link">
+            <img src={img} alt={s.title || ''} loading="lazy" />
           </Link>
-          <div className="premium-woo-qv-data" data-product-id={product.id}></div>
         </div>
         <div className="premium-woo-products-details-wrap">
-          <span className="premium-woo-product-category">{product.cat}</span>
-          <Link to="/product" className="premium-woo-product__link">
-            <h2 className="woocommerce-loop-product__title">{product.name}</h2>
+          <span className="premium-woo-product-category">
+            {e.displayName || '—'}{e.city ? ` • ${e.city}` : ''}
+          </span>
+          <Link to={`/product?id=${s.id}`} className="premium-woo-product__link">
+            <h2 className="woocommerce-loop-product__title">{s.title || 'Service'}</h2>
           </Link>
           <span className="price">
             <span className="woocommerce-Price-amount amount">
-              <bdi><span className="woocommerce-Price-currencySymbol">$</span>{product.price.replace('$', '')}</bdi>
+              <bdi>{formatXaf(s.priceXaf)}</bdi>
             </span>
           </span>
           <div className="premium-woo-product-actions-wrapper">
             <div className="premium-woo-atc-button" data-variations={JSON.stringify('true')}>
               <Link
-                to="/shop"
-                aria-describedby={`woocommerce_loop_add_to_cart_link_describedby_${product.id}`}
+                to={`/product?id=${s.id}`}
                 data-quantity="1"
                 className="button product_type_external"
-                data-product_id={product.id}
-                data-product_sku={product.sku}
-                aria-label="Buy now"
+                data-product_id={s.id}
+                aria-label="Voir le service"
                 rel="nofollow"
-              >Buy now</Link>
-              <span id={`woocommerce_loop_add_to_cart_link_describedby_${product.id}`} className="screen-reader-text"></span>
+              >Voir</Link>
             </div>
           </div>
         </div>

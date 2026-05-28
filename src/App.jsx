@@ -20,6 +20,7 @@ const ResetPasswordPage    = lazy(() => import('./pages/ResetPasswordPage.jsx'))
 const VerifyOtpPage        = lazy(() => import('./pages/VerifyOtpPage.jsx'));
 const NotFoundPage         = lazy(() => import('./pages/NotFoundPage.jsx'));
 const PreviewComponentsPage = lazy(() => import('./pages/PreviewComponentsPage.jsx'));
+const ProfilePage           = lazy(() => import('./pages/ProfilePage.jsx'));
 
 function PageLoader() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
           <Route path="/reset-password"   element={<ResetPasswordPage />} />
           <Route path="/verify-otp"       element={<VerifyOtpPage />} />
           <Route path="/preview-components" element={<PreviewComponentsPage />} />
+          <Route path="/profile"            element={<ProfilePage />} />
           <Route path="*"                 element={<NotFoundPage />} />
         </Route>
       </Routes>

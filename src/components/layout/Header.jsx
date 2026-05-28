@@ -1,36 +1,110 @@
 import { useState, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
+import { useAuth } from '../../hooks/useAuth';
 
 function ProfileButton() {
+  const navigate = useNavigate();
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const { logout } = useAuth();
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef(null);
+
+  const handleEnter = () => {
+    clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  const handleLeave = () => {
+    closeTimer.current = setTimeout(() => setOpen(false), 150);
+  };
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    setOpen(false);
+    try { await logout(); } catch {}
+    navigate('/login');
+  };
+  // { id: 5551, label: 'Home', to: '/', children: [
+  //   { id: 370, label: 'Home 2', to: '/home-2' },
+  // ]},
+  // { id: 4982, label: 'Shop', to: '/shop', children: [
+  //   { id: 5552, label: 'Shop 2', to: '/shop-2' },
+  //   { id: 1657, label: 'Single product', to: '/product' },
+  // ]},
+  // { id: 373, label: 'Pages', to: '#', anchor: true, children: [
+  //   { id: 4470, label: 'About', to: '/about' },
+  //   { id: 377,  label: 'Help center', to: '/about' },
+  //   { id: 4471, label: 'Team', to: '/authors' },
+  //   { id: 6168, label: 'Authors', to: '/authors' },
+  //   { id: 4474, label: 'Login', to: '/login' },
+  //   { id: 4467, label: 'Error page', to: '/404' },
+  // ]},
+  // { id: 4696, label: 'Blog', to: '/blog', children: [
+  //   { id: 4697, label: 'Blog 2', to: '/blog-2' },
+  //   { id: 1281, label: 'Single post', to: '/blog' },
+  // ]},
+  // { id: 375, label: 'Contacts', to: '/contacts' },
+  const items = isAuthenticated
+    ? [
+        { label: 'Mon compte',   to: '/profile' },
+        { label: 'Messagerie',   to: '/profile?tab=messages' },
+        { label: 'Déconnexion',  onClick: handleLogout },
+      ]
+    : [
+        { label: 'Se connecter',    to: '/login' },
+        { label: 'Créer un compte', to: '/register' },
+      ];
+
   return (
-    <Link to="/login" className="xc-profile-btn" aria-label="Profil utilisateur">
-      <User size={24} strokeWidth={1} />
-    </Link>
+    <div
+      className="xc-profile-wrap elementor-element elementor-element-1eeb09b elementor-widget elementor-widget-nav-menu"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <span
+        role="button" tabIndex={0}
+        className="xc-profile-btn"
+        aria-label="Profil utilisateur"
+        aria-expanded={open}
+      >
+        <User size={24} strokeWidth={1} />
+      </span>
+      <nav
+        className="elementor-nav-menu__container elementor-nav-menu--main xc-profile-dropdown"
+        aria-hidden={!open}
+        style={{ display: open ? 'block' : 'none' }}
+      >
+        <ul className="elementor-nav-menu">
+          <li className="menu-item menu-item-has-children">
+            <ul className="sub-menu elementor-nav-menu--dropdown" style={{ display: 'block' }}>
+              {items.map((item, i) => (
+                <li
+                  key={item.label}
+                  className={`menu-item menu-item-type-custom menu-item-object-custom menu-item-profile-${i}`}
+                >
+                  {item.onClick ? (
+                    <a href="#" className="elementor-sub-item" onClick={item.onClick}>{item.label}</a>
+                  ) : (
+                    <Link to={item.to} className="elementor-sub-item" onClick={() => setOpen(false)}>
+                      {item.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
   );
 }
 
 const NAV_ITEMS = [
-  { id: 5551, label: 'Home', to: '/', children: [
-    { id: 370, label: 'Home 2', to: '/home-2' },
-  ]},
-  { id: 4982, label: 'Shop', to: '/shop', children: [
-    { id: 5552, label: 'Shop 2', to: '/shop-2' },
-    { id: 1657, label: 'Single product', to: '/product' },
-  ]},
-  { id: 373, label: 'Pages', to: '#', anchor: true, children: [
-    { id: 4470, label: 'About', to: '/about' },
-    { id: 377,  label: 'Help center', to: '/about' },
-    { id: 4471, label: 'Team', to: '/authors' },
-    { id: 6168, label: 'Authors', to: '/authors' },
-    { id: 4474, label: 'Login', to: '/login' },
-    { id: 4467, label: 'Error page', to: '/404' },
-  ]},
-  { id: 4696, label: 'Blog', to: '/blog', children: [
-    { id: 4697, label: 'Blog 2', to: '/blog-2' },
-    { id: 1281, label: 'Single post', to: '/blog' },
-  ]},
-  { id: 375, label: 'Contacts', to: '/contacts' },
+  { id: 1, label: 'Accueil',   to: '/home-2' },
+  { id: 2, label: 'Catalogue', to: '/shop' },
+  { id: 3, label: 'À Propos',  to: '/about' },
+  { id: 4, label: 'Contacts',  to: '/contacts' },
 ];
 
 function NavItem({ item, tabIndex, pathname }) {
