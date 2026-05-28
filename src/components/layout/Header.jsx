@@ -103,6 +103,7 @@ function ProfileButton() {
 const NAV_ITEMS = [
   { id: 1, label: 'Accueil',   to: '/home-2' },
   { id: 2, label: 'Catalogue', to: '/shop' },
+  { id: 5, label: 'Escortes',  to: '/escortes' },
   { id: 3, label: 'À Propos',  to: '/about' },
   { id: 4, label: 'Contacts',  to: '/contacts' },
 ];

@@ -10,6 +10,7 @@ const BlogPage      = lazy(() => import('./pages/BlogPage.jsx'));
 const Blog2Page     = lazy(() => import('./pages/Blog2Page.jsx'));
 const ShopPage      = lazy(() => import('./pages/ShopPage.jsx'));
 const Shop2Page     = lazy(() => import('./pages/Shop2Page.jsx'));
+const EscortesPage  = lazy(() => import('./pages/EscortesPage.jsx'));
 const ProductPage   = lazy(() => import('./pages/ProductPage.jsx'));
 const ContactsPage  = lazy(() => import('./pages/ContactsPage.jsx'));
 const AuthorsPage   = lazy(() => import('./pages/AuthorsPage.jsx'));
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/blog-2"   element={<Blog2Page />} />
           <Route path="/shop"     element={<ShopPage />} />
           <Route path="/shop-2"   element={<Shop2Page />} />
+          <Route path="/escortes" element={<EscortesPage />} />
           <Route path="/product"  element={<ProductPage />} />
           <Route path="/contacts" element={<ContactsPage />} />
           <Route path="/authors"  element={<AuthorsPage />} />

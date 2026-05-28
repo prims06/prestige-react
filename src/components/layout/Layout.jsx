@@ -11,6 +11,7 @@ const PAGE_CLASSES = {
   '/blog-2':   ['archive', 'category', 'category-token', 'category-38', 'elementor-page-1186'],
   '/shop':     ['archive', 'tax-product_cat', 'term-art', 'term-19', 'woocommerce', 'woocommerce-page', 'elementor-page-1592'],
   '/shop-2':   ['archive', 'tax-product_cat', 'term-utility', 'term-57', 'woocommerce', 'woocommerce-page', 'elementor-page-5542'],
+  '/escortes': ['archive', 'tax-product_cat', 'term-art', 'term-19', 'woocommerce', 'woocommerce-page', 'elementor-page-1592'],
   '/product':  ['wp-singular', 'product-template-default', 'single', 'single-product', 'postid-214', 'woocommerce', 'woocommerce-page', 'elementor-page-1614'],
   '/contacts': ['wp-singular', 'single', 'single-envato_tk_templates', 'postid-422', 'elementor-page-422'],
   '/authors':  ['wp-singular', 'single', 'single-envato_tk_templates', 'postid-411', 'elementor-page-411'],

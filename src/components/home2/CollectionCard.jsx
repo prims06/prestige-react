@@ -1,7 +1,12 @@
 import GalleryContainer from './GalleryContainer';
 import { GALLERY_SETTINGS } from '../../data/home2';
 
-export default function CollectionCard({ c, colSize = 33 }) {
+export default function CollectionCard({ c, colSize = 33, coverUrl }) {
+  // Surcharge du background du theme home-2 par la photo dynamique de l'escorte.
+  // Optionnel : si non fourni, l'image hardcodee de post-18.css par innerColId s'applique.
+  const innerWrapStyle = coverUrl
+    ? { backgroundImage: `url("${coverUrl}")`, backgroundPosition: 'center center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }
+    : undefined;
   return (
     <div className={`elementor-column elementor-col-${colSize} elementor-top-column elementor-element elementor-element-${c.outerColId}${c.outerColCls ? ' ' + c.outerColCls : ''}`}
       data-id={c.outerColId} data-element_type="column" data-e-type="column"
@@ -14,7 +19,7 @@ export default function CollectionCard({ c, colSize = 33 }) {
             <div className={`elementor-column elementor-col-100 elementor-inner-column elementor-element elementor-element-${c.innerColId}`}
               data-id={c.innerColId} data-element_type="column" data-e-type="column"
               data-settings='{"background_background":"classic","mdp_selection_sticky_column_effect_enable":false}'>
-              <div className="elementor-widget-wrap elementor-element-populated">
+              <div className="elementor-widget-wrap elementor-element-populated" style={innerWrapStyle}>
                 <div className="elementor-background-overlay"></div>
                 <div className={`elementor-element elementor-element-${c.titleId} elementor-widget elementor-widget-heading`}
                   data-id={c.titleId} data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
