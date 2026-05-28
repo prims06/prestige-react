@@ -84,46 +84,62 @@ export default function EscortsGrid({ filters = {} }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher]);
 
+  // Wrapper widget identique a ShopProductGrid (elementor-element-785758d) :
+  // c'est sous ce scope (.elementor-1592 ...-785758d .premium-woo-products-pagination)
+  // que post-1592.css stylise la pagination "Charger plus".
   return (
-    <>
-      {error && (
-        <div style={{ padding: '1rem', color: '#e74c3c', marginBottom: '1rem' }}>
-          {getErrorMessage(error)}
-        </div>
-      )}
+    <div className="elementor-element elementor-element-785758d premium-woo-product-align-left premium-qv-hidden-yes elementor-widget elementor-widget-premium-woo-products" data-id="785758d" data-element_type="widget" data-e-type="widget" data-widget_type="premium-woo-products.grid-3">
+      <div className="elementor-widget-container">
+        <div className="premium-woocommerce premium-woo-products-grid premium-woo-skin-grid-3 premium-woo-query-all" data-page-id="1592" data-skin="grid_3" data-quick-view="yes">
+          <div className="premium-woo-products-inner premium-woo-product__hover-zoomin">
 
-      {items.length > 0 && (
-        <section className="elementor-section elementor-inner-section elementor-section-boxed elementor-section-height-default" data-element_type="section" data-e-type="section">
-          <div className="elementor-container elementor-column-gap-no">
-            {items.map((esc, i) => {
-              const cover = resolveMediaUrl(esc.coverUrl) || resolveMediaUrl(esc.avatarUrl) || PLACEHOLDER_IMG;
-              return (
-                <CollectionCard
-                  key={esc.id}
-                  c={buildCardData(esc, i)}
-                  coverUrl={cover}
-                />
-              );
-            })}
+            {error && (
+              <div style={{ padding: '1rem', color: '#e74c3c', marginBottom: '1rem' }}>
+                {getErrorMessage(error)}
+              </div>
+            )}
+
+            {/* Le CSS des CollectionCard (post-18.css) est scope sous .elementor-18.
+                On reproduit donc le contexte exact de la home-2 : wrapper
+                .elementor-18 + section 45b7777 + container. Largeur des colonnes
+                = 50% (defini par post-18.css) => 2 cartes par ligne. */}
+            {items.length > 0 && (
+              <div className="elementor elementor-18">
+                <section className="elementor-section elementor-top-section elementor-element elementor-element-45b7777 elementor-section-boxed elementor-section-height-default" data-id="45b7777" data-element_type="section" data-e-type="section" data-settings='{"mdp_selection_sticky_effect_enable":false}'>
+                  <div className="elementor-container elementor-column-gap-no">
+                    {items.map((esc, i) => {
+                      const cover = resolveMediaUrl(esc.coverUrl) || resolveMediaUrl(esc.avatarUrl) || PLACEHOLDER_IMG;
+                      return (
+                        <CollectionCard
+                          key={esc.id}
+                          c={buildCardData(esc, i)}
+                          coverUrl={cover}
+                        />
+                      );
+                    })}
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {isLoading && items.length === 0 && (
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem 0' }}>
+                <Spinner size="lg" />
+              </div>
+            )}
+
+            {!isLoading && !error && items.length === 0 && (
+              <EmptyState
+                icon={<i className="fas fa-search" />}
+                title="Aucune escorte trouvée"
+                description="Aucune escorte ne correspond à vos critères. Essayez d'élargir vos filtres."
+              />
+            )}
+
+            <LoadMore onClick={() => loadMore()} isLoading={isLoading} hasMore={hasMore} />
           </div>
-        </section>
-      )}
-
-      {isLoading && items.length === 0 && (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem 0' }}>
-          <Spinner size="lg" />
         </div>
-      )}
-
-      {!isLoading && !error && items.length === 0 && (
-        <EmptyState
-          icon={<i className="fas fa-search" />}
-          title="Aucune escorte trouvée"
-          description="Aucune escorte ne correspond à vos critères. Essayez d'élargir vos filtres."
-        />
-      )}
-
-      <LoadMore onClick={() => loadMore()} isLoading={isLoading} hasMore={hasMore} />
-    </>
+      </div>
+    </div>
   );
 }
