@@ -102,7 +102,7 @@ export default function EscortsMain() {
     <section className="elementor-section elementor-top-section elementor-element elementor-element-10bc2a5 elementor-section-boxed elementor-section-height-default" data-id="10bc2a5" data-element_type="section" data-e-type="section" data-settings='{"mdp_selection_sticky_effect_enable":false}'>
       <div className="elementor-container elementor-column-gap-no">
         {/* Sidebar */}
-        <div className="elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-2f274bb" data-id="2f274bb" data-element_type="column" data-e-type="column" data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
+        <div className="elementor-column elementor-col-25 elementor-top-column elementor-element elementor-element-2f274bb" data-id="2f274bb" data-element_type="column" data-e-type="column" data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
           <div className="elementor-widget-wrap elementor-element-populated">
 
             {/* Listes cliquables ville / quartier — reutilise les dataIds et
@@ -145,7 +145,7 @@ export default function EscortsMain() {
         </div>
 
         {/* Grille des escortes */}
-        <div className="elementor-column elementor-col-66 elementor-top-column elementor-element elementor-element-2da72a2" data-id="2da72a2" data-element_type="column" data-e-type="column" data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
+        <div className="elementor-column elementor-col-75 elementor-top-column elementor-element elementor-element-2da72a2" data-id="2da72a2" data-element_type="column" data-e-type="column" data-settings='{"mdp_selection_sticky_column_effect_enable":false}'>
           <div className="elementor-widget-wrap elementor-element-populated">
             <EscortsGrid filters={filters} />
           </div>

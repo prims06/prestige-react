@@ -51,7 +51,7 @@ function buildCardData(esc, i) {
   };
 }
 
-// "Charger plus" stylé comme la pagination originale du theme
+// "Charger plus" style comme la pagination originale du theme
 function LoadMore({ onClick, isLoading, hasMore }) {
   if (!hasMore) return null;
   return (
@@ -84,7 +84,7 @@ export default function EscortsGrid({ filters = {} }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher]);
 
-  // Wrapper widget identique a ShopProductGrid (elementor-element-785758d) :
+  // Wrapper widget identique à ShopProductGrid (elementor-element-785758d) :
   // c'est sous ce scope (.elementor-1592 ...-785758d .premium-woo-products-pagination)
   // que post-1592.css stylise la pagination "Charger plus".
   return (
@@ -99,29 +99,50 @@ export default function EscortsGrid({ filters = {} }) {
               </div>
             )}
 
-            {/* Le CSS des CollectionCard (post-18.css) est scope sous .elementor-18.
-                On reproduit donc le contexte exact de la home-2 : wrapper
-                .elementor-18 + section 45b7777 + container. Largeur des colonnes
-                = 50% (defini par post-18.css) => 2 cartes par ligne. */}
+            {/* CSS Grid : 3 colonnes desktop, 2 tablette, 1 mobile.
+                colSize="" supprime la classe elementor-col-33 (28%!) pour
+                laisser le grid gerer la largeur. */}
+            <style>{`
+              .escorts-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                column-gap: 0px;
+                row-gap: 24px;
+                width: 100%;
+              }
+              .escorts-grid > .elementor-column {
+                width: 100% !important;
+              }
+              @media (max-width: 1200px) {
+                .escorts-grid {
+                  grid-template-columns: repeat(2, 1fr);
+                  column-gap: 16px;
+                  row-gap: 20px;
+                }
+              }
+              @media (max-width: 767px) {
+                .escorts-grid {
+                  grid-template-columns: 1fr;
+                  column-gap: 0;
+                  row-gap: 16px;
+                }
+              }
+            `}</style>
             {items.length > 0 && (
-              <div className="elementor elementor-18">
-                <section className="elementor-section elementor-top-section elementor-element elementor-element-45b7777 elementor-section-boxed elementor-section-height-default" data-id="45b7777" data-element_type="section" data-e-type="section" data-settings='{"mdp_selection_sticky_effect_enable":false}'>
-                  <div className="elementor-container elementor-column-gap-no">
-                    {items.map((esc, i) => {
-                      const cover = resolveMediaUrl(esc.coverUrl) || resolveMediaUrl(esc.avatarUrl) || PLACEHOLDER_IMG;
-                      return (
-                        <CollectionCard
-                          key={esc.id}
-                          c={buildCardData(esc, i)}
-                          coverUrl={cover}
-                        />
-                      );
-                    })}
-                  </div>
-                </section>
+              <div className="elementor elementor-18 escorts-grid">
+                {items.map((esc, i) => {
+                  const cover = resolveMediaUrl(esc.coverUrl) || resolveMediaUrl(esc.avatarUrl) || PLACEHOLDER_IMG;
+                  return (
+                    <CollectionCard
+                      key={esc.id}
+                      c={buildCardData(esc, i)}
+                      coverUrl={cover}
+                      colSize=""
+                    />
+                  );
+                })}
               </div>
             )}
-
             {isLoading && items.length === 0 && (
               <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem 0' }}>
                 <Spinner size="lg" />
