@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTopEscorts } from '../../hooks/useCatalog';
+import { resolveMediaUrl } from '../../api/client';
 
 // Donnees standardisees — chaque slide porte son propre bgImage
 const SLIDES = [
@@ -12,6 +14,16 @@ const SLIDES = [
   { id: 's4', title: 'Neon mirage',      author: '@neonart',
     bgImage: '/images/home-2/pawel-czerwinski-hNrd99q5peI-unsplash-1-600x600.jpg' },
 ];
+
+function buildDynamicSlides(escorts) {
+  if (!Array.isArray(escorts) || escorts.length === 0) return null;
+  return escorts.map((esc, i) => ({
+    id: esc.id || `api-${i}`,
+    title: esc.escort?.displayName || 'Escorte',
+    author: '@' + (esc.escort?.displayName || 'escorte').toLowerCase().replace(/\s+/g, ''),
+    bgImage: resolveMediaUrl(esc.coverUrl) || resolveMediaUrl(esc.avatarUrl) || '/images/home-2/img@2x.jpg',
+  }));
+}
 
 const DURATION = 550;
 const AUTOPLAY = 4000;
@@ -99,7 +111,10 @@ function Slide({ slide, slotPos, offset, animated, visible }) {
 }
 
 export default function HeroSection() {
-  const N = SLIDES.length;
+  const { data: apiData } = useTopEscorts(8);
+  const dynamicSlides = buildDynamicSlides(apiData);
+  const slides = dynamicSlides || SLIDES;
+  const N = slides.length;
   const visible = useVisibleCount();
   const [startIdx, setStartIdx] = useState(0);
   const [offset, setOffset]     = useState(0);
@@ -136,7 +151,7 @@ export default function HeroSection() {
   const slotCount = visible + 2;
   const slots = Array.from({ length: slotCount }, (_, j) => {
     const slotPos = j - 1; // -1 .. visible
-    const slide = SLIDES[(startIdx + slotPos + N * 2) % N];
+    const slide = slides[(startIdx + slotPos + N * 2) % N];
     return { slide, slotPos, key: `slot-${j}` };
   });
 

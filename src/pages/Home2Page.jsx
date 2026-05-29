@@ -27,8 +27,8 @@ export default function Home2Page() {
           <MobileExploreMoreSection />
           <FeaturedCollectionsHeader />
           <CollectionsRow1Section />
-          <TabletCollectionsSection />
-          <CollectionsRow2Section />
+          {/* <TabletCollectionsSection />
+          <CollectionsRow2Section /> */}
           <MobileViewAllCollectionsSection />
           <FeatureBoxesSection />
           <TopAuthorsHeader />

@@ -7,7 +7,7 @@ export default function GalleryContainer({ aspectRatio, items }) {
           <div className="e-gallery-image elementor-gallery-item__image"
             data-thumbnail={item.thumb} data-width={item.w} data-height={item.h}
             aria-label="" role="img"
-            style={{ backgroundImage: `url("${item.thumb}")` }} />
+            style={{ backgroundImage: `url("${item.thumb}")`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
         </div>
       ))}
     </div>
